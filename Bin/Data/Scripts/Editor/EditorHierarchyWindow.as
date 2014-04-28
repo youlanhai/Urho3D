@@ -752,6 +752,7 @@ void HandleHierarchyItemClick(StringHash eventType, VariantMap& eventData)
         return;
 
     UIElement@ uiElement = eventData["Item"].GetPtr();
+    ui.focusElement = hierarchyList;
     int selectionIndex = eventData["Selection"].GetInt();
 
     Array<UIElement@> actions;
@@ -860,7 +861,7 @@ void HandleDragDropFinish(StringHash eventType, VariantMap& eventData)
             }
             else if (type == RESOURCE_TYPE_PARTICLEEMITTER)
             {
-                if (browserFile.extension == "xml")
+                if (browserFile.extension == ".xml")
                 {
                     XMLFile@ file = cache.GetResource("XMLFile", browserFile.resourceKey);
                     if (file is null)
@@ -873,7 +874,7 @@ void HandleDragDropFinish(StringHash eventType, VariantMap& eventData)
             }
             else if (type == RESOURCE_TYPE_2D_PARTICLE_EFFECT)
             {
-                if (browserFile.extension == "xml")
+                if (browserFile.extension == ".xml")
                 {
                     ParticleEffect2D@ effect = cache.GetResource("ParticleEffect2D", browserFile.resourceKey);
                     if (effect is null)
@@ -1207,6 +1208,7 @@ void FocusComponent(Component@ component)
 {
     uint index = GetComponentListIndex(component);
     hierarchyList.selection = index;
+    ui.focusElement = hierarchyList;
 }
 
 void FocusUIElement(UIElement@ element)

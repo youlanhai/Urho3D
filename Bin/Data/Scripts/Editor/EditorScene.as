@@ -302,6 +302,8 @@ void CreateComponent(const String&in componentType)
             CreateComponentAction action;
             action.Define(newComponent);
             group.actions.Push(action);
+
+            FocusComponent(newComponent);
         }
     }
 
@@ -315,6 +317,7 @@ void CreateComponent(const String&in componentType)
 void CreateLoadedComponent(Component@ component)
 {
     if (component is null) return;
+
     CreateComponentAction action;
     action.Define(component);
     SaveEditAction(action);
@@ -902,7 +905,7 @@ bool SceneResetToDefault()
 
     SaveEditActionGroup(group);
     SetSceneModified();
-    attributesFullDirty = true;
+    UpdateAttributeInspector();
 
     return true;
 }
@@ -960,20 +963,22 @@ bool SaveParticleData(const String&in fileName)
 
 void AssignMaterial(StaticModel@ model, String materialPath)
 {
-    Material@ material = cache.GetResource("Material", materialPath);
-    if (material is null)
+    Material@ newMaterial = cache.GetResource("Material", materialPath);
+    if (newMaterial is null)
         return;
 
-    Array<Material@> oldMaterials;
-    for (uint i=0; i < model.numGeometries; i++)
-    {
-        oldMaterials.Push(model.materials[i]);
-    }
-    model.material = material;
+    Variant variant = model.GetAttribute("Material");
+    ResourceRefList materials = variant.GetResourceRefList();
+    Array<String> oldMaterialNames;
+    for (uint i = 0; i < materials.length; ++i)
+        oldMaterialNames.Push(materials.names[i]);
+
+    model.material = newMaterial;
 
     AssignMaterialAction action;
-    action.Define(model, oldMaterials, material);
+    action.Define(model, oldMaterialNames, newMaterial.name);
     SaveEditAction(action);
+    UpdateAttributeInspector();
     SetSceneModified();
     FocusComponent(model); 
 }
@@ -1003,20 +1008,21 @@ void AssignModel(StaticModel@ assignee, String modelPath)
     AssignModelAction action;
     action.Define(assignee, oldModel, model);
     SaveEditAction(action);
+    UpdateAttributeInspector();
     SetSceneModified();
     FocusComponent(assignee); 
 }
 
 void CreateModelWithStaticModel(String filepath, Node@ parent)
 {
-    if (parent is null)
+    if (parent is null || editNode is null)
         return;
 
     Model@ model = cache.GetResource("Model", filepath);
     if (model is null)
         return;
 
-    StaticModel@ staticModel = cast<StaticModel>(editNode.CreateComponent("StaticModel"));
+    StaticModel@ staticModel = cast<StaticModel>(parent.CreateComponent("StaticModel"));
     staticModel.model = model;
     CreateLoadedComponent(staticModel);
 }
@@ -1030,7 +1036,7 @@ void CreateModelWithAnimatedModel(String filepath, Node@ parent)
     if (model is null)
         return;
 
-    AnimatedModel@ animatedModel = cast<StaticModel>(editNode.CreateComponent("AnimatedModel"));
+    AnimatedModel@ animatedModel = cast<StaticModel>(parent.CreateComponent("AnimatedModel"));
     animatedModel.model = model;
     CreateLoadedComponent(animatedModel);
 }

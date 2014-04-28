@@ -789,17 +789,14 @@ class EditMaterialAction : EditAction
 class AssignMaterialAction : EditAction
 {
     WeakHandle model;
-    Array<String> oldMaterials;
+    Array<String> oldMaterialNames;
     String newMaterialName;
 
-    void Define(StaticModel@ model_, Array<Material@> oldMaterials_, Material@ newMaterial_)
+    void Define(StaticModel@ model_, Array<String> oldMaterialsNames_, String newMaterialName_)
     {
         model = model_;
-        for (uint i =0; i < oldMaterials_.length; i++)
-        {
-            oldMaterials.Push(oldMaterials_[i].name);
-        }
-        newMaterialName = newMaterial_.name;
+        oldMaterialNames = oldMaterialsNames_;
+        newMaterialName = newMaterialName_;
     }
 
     void Undo()
@@ -808,11 +805,12 @@ class AssignMaterialAction : EditAction
         if (staticModel is null)
             return;
 
-        for(uint i=0; i<oldMaterials.length; i++)
+        for(uint i=0; i<oldMaterialNames.length; i++)
         {
-            Material@ material = cache.GetResource("Material", oldMaterials[i]);
+            Material@ material = cache.GetResource("Material", oldMaterialNames[i]);
             staticModel.materials[i] = material;
         }
+        attributesFullDirty = true;
     }
 
     void Redo()
@@ -823,6 +821,7 @@ class AssignMaterialAction : EditAction
 
         Material@ material = cache.GetResource("Material", newMaterialName);
         staticModel.material = material;
+        attributesFullDirty = true;
     }
 }
 
@@ -849,6 +848,7 @@ class AssignModelAction : EditAction
         if (model is null)
             return;
         staticModel_.model = model;
+        attributesFullDirty = true;
     }
 
     void Redo()
@@ -861,6 +861,7 @@ class AssignModelAction : EditAction
         if (model is null)
             return;
         staticModel_.model = model;
+        attributesFullDirty = true;
     }
 
 }

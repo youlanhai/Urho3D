@@ -169,7 +169,7 @@ void CreateResourceBrowserUI()
     browserWindow.visible = false;
     browserWindow.opacity = uiMaxOpacity;
 
-    int height = Min(ui.root.height * .25, 300);
+    int height = Min(ui.root.height / 4, 300);
     browserWindow.SetSize(900, height);
     browserWindow.SetPosition(35, ui.root.height - height - 25);
 
@@ -286,6 +286,7 @@ void HandleBrowserFileClick(StringHash eventType, VariantMap& eventData)
         return;
 
     UIElement@ uiElement = eventData["Item"].GetPtr();
+    ui.focusElement = browserFileList;
     BrowserFile@ file = GetBrowserFileFromUIElement(uiElement);
 
     if (file is null)
@@ -544,7 +545,7 @@ void HandleResourceBrowserSearchTextChange(StringHash eventType, VariantMap& eve
                 if (find > -1)
                 {
                     int fudge = query.length - file.fullname.length;
-                    int score = find * Abs(fudge*2) + Abs(fudge);
+                    int score = find * int(Abs(fudge*2)) + int(Abs(fudge));
                     file.sortScore = score;
                     scored.Push(file);
                     scores.Push(score);
