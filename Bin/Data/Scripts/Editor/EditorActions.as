@@ -810,7 +810,7 @@ class AssignMaterialAction : EditAction
             Material@ material = cache.GetResource("Material", oldMaterialNames[i]);
             staticModel.materials[i] = material;
         }
-        attributesFullDirty = true;
+        UpdateAttributeInspector();
     }
 
     void Redo()
@@ -821,7 +821,7 @@ class AssignMaterialAction : EditAction
 
         Material@ material = cache.GetResource("Material", newMaterialName);
         staticModel.material = material;
-        attributesFullDirty = true;
+        UpdateAttributeInspector();
     }
 }
 
@@ -834,21 +834,25 @@ class AssignModelAction : EditAction
     void Define(StaticModel@ staticModel_, Model@ oldModel_, Model@ newModel_)
     {
         staticModel = staticModel_;
-        oldModel = oldModel_.name;
+        if (oldModel_ !is null)
+            oldModel = oldModel_.name;
+        else
+            oldModel = "";
+
         newModel = newModel_.name;
     }
 
     void Undo()
     {
         StaticModel@ staticModel_ = staticModel.Get();
-        if (staticModel_ is null)
+        if (staticModel_ is null || oldModel.empty)
             return;
 
         Model@ model = cache.GetResource("Model", oldModel);
         if (model is null)
             return;
         staticModel_.model = model;
-        attributesFullDirty = true;
+        UpdateAttributeInspector();
     }
 
     void Redo()
@@ -861,7 +865,6 @@ class AssignModelAction : EditAction
         if (model is null)
             return;
         staticModel_.model = model;
-        attributesFullDirty = true;
+        UpdateAttributeInspector();
     }
-
 }
