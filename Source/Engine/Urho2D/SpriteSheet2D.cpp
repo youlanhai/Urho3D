@@ -177,13 +177,15 @@ bool SpriteSheet2D::Save(Serializer& dest) const
     return xmlFile->Save(dest);
 }
 
-Sprite2D* SpriteSheet2D::GetSprite(const String& name) const
+void SpriteSheet2D::SetTexture(Texture2D* texture)
 {
-    HashMap<String, SharedPtr<Sprite2D> >::ConstIterator i = spriteMapping_.Find(name);
-    if (i == spriteMapping_.End())
-        return 0;
+    if (texture == texture_)
+        return;
 
-    return i->second_;
+    texture_ = texture;
+
+    for (HashMap<String, SharedPtr<Sprite2D> >::Iterator i = spriteMapping_.Begin(); i != spriteMapping_.End(); ++i)
+        i->second_->SetTexture(texture_);
 }
 
 void SpriteSheet2D::DefineSprite(const String& name, const IntRect& rectangle, const Vector2& hotSpot)
@@ -191,30 +193,33 @@ void SpriteSheet2D::DefineSprite(const String& name, const IntRect& rectangle, c
     if (!texture_)
         return;
 
-    if (GetSprite(name))
-        return;
-
-    SharedPtr<Sprite2D> sprite(new Sprite2D(context_));
-    sprite->SetName(name);
-    sprite->SetTexture(texture_);
-    sprite->SetRectangle(rectangle);
-    sprite->SetHotSpot(hotSpot);
-    sprite->SetSpriteSheet(this);
-
-    spriteMapping_[name] = sprite;
-}
-
-void SpriteSheet2D::UpdateSprite(const String& name, const IntRect& rectangle, const Vector2& hotSpot)
-{
-    if (!texture_)
-        return;
-
     Sprite2D* sprite = GetSprite(name);
     if (sprite)
     {
+        // Update rectangle and hot spot
         sprite->SetRectangle(rectangle);
         sprite->SetHotSpot(hotSpot);
     }
+    else
+    {
+        SharedPtr<Sprite2D> sprite(new Sprite2D(context_));
+        sprite->SetName(name);
+        sprite->SetTexture(texture_);
+        sprite->SetRectangle(rectangle);
+        sprite->SetHotSpot(hotSpot);
+        sprite->SetSpriteSheet(this);
+
+        spriteMapping_[name] = sprite;
+    }
+}
+
+Sprite2D* SpriteSheet2D::GetSprite(const String& name) const
+{
+    HashMap<String, SharedPtr<Sprite2D> >::ConstIterator i = spriteMapping_.Find(name);
+    if (i == spriteMapping_.End())
+        return 0;
+
+    return i->second_;
 }
 
 }

@@ -73,10 +73,10 @@ static void RegisterSprite2D(asIScriptEngine* engine)
 static void RegisterSpriteSheet2D(asIScriptEngine* engine)
 {
     RegisterResource<SpriteSheet2D>(engine, "SpriteSheet2D");
+    engine->RegisterObjectMethod("SpriteSheet2D", "void set_texture(Texture2D@+)", asMETHOD(SpriteSheet2D, SetTexture), asCALL_THISCALL);
     engine->RegisterObjectMethod("SpriteSheet2D", "Texture2D@+ get_texture() const", asMETHOD(SpriteSheet2D, GetTexture), asCALL_THISCALL);
     engine->RegisterObjectMethod("SpriteSheet2D", "Sprite2D@+ GetSprite(const String&)", asMETHOD(SpriteSheet2D, GetSprite), asCALL_THISCALL);
     engine->RegisterObjectMethod("SpriteSheet2D", "void DefineSprite(const String&, const IntRect&, const Vector2&)", asMETHOD(SpriteSheet2D, DefineSprite), asCALL_THISCALL);
-    engine->RegisterObjectMethod("SpriteSheet2D", "void UpdateSprite(const String&, const IntRect&, const Vector2&)", asMETHOD(SpriteSheet2D, UpdateSprite), asCALL_THISCALL);
 }
 
 // Template function for registering a class derived from Drawable2D.
