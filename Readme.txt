@@ -98,6 +98,7 @@ Urho3D uses the following third-party libraries:
   john-ratcliffs-code-suppository-blog.html)
 - stb_image 1.29 (http://nothings.org/)
 - stb_vorbis 0.99996 (http://nothings.org/)
+- tmx-parser 1.0.0 (https://code.google.com/p/tmx-parser)
 - tolua++ 1.0.93 (http://www.codenix.com/~tolua)
 
 DXT / ETC1 / PVRTC decompression code based on the Squish library and the Oolong

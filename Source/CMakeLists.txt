@@ -121,7 +121,7 @@ endif ()
 include (CPack)
 
 # Add targets
-foreach (TARGET Box2D Bullet Civetweb Detour FreeType JO kNet LZ4 PugiXml Recast SDL StanHull STB)
+foreach (TARGET Box2D Bullet Civetweb Detour FreeType JO kNet LZ4 PugiXml Recast SDL StanHull STB tmx-parser)
     add_subdirectory (ThirdParty/${TARGET})
 endforeach ()
 if (URHO3D_ANGELSCRIPT)
