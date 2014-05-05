@@ -24,8 +24,15 @@
 
 #include "Component.h"
 
+namespace Tmx
+{
+    class Layer;
+}
+
 namespace Urho3D
 {
+
+class TileMap2D;
 
 /// Tile map layer.
 class URHO3D_API TileLayer2D : public Component
@@ -34,11 +41,20 @@ class URHO3D_API TileLayer2D : public Component
 
 public:
     /// Construct.
-    TileLayer2D(Context* scontext);
+    TileLayer2D(Context* context);
     /// Destruct.
     virtual ~TileLayer2D();
     /// Register object factory.
     static void RegisterObject(Context* context);
+
+    /// Set tmx layer.
+    void SetTmxLayer(TileMap2D* tileMap, const Tmx::Layer* tmxLayer);
+
+private:
+    /// Tile map.
+    WeakPtr<TileMap2D> tileMap_;
+    /// Tmx layer.
+    const Tmx::Layer* tmxLayer_;
 };
 
 }

@@ -24,8 +24,16 @@
 
 #include "Component.h"
 
+namespace Tmx
+{
+    class Map;
+}
+
 namespace Urho3D
 {
+
+class File;
+class Sprite2D;
 
 /// Tile map.
 class URHO3D_API TileMap2D : public Component
@@ -39,6 +47,24 @@ public:
     virtual ~TileMap2D();
     /// Register object factory.
     static void RegisterObject(Context* context);
+
+    /// Set tmx file.
+    bool SetTMXFile(File* tmxFile);
+
+    /// Return tile width.
+    float GetTileWidth() const;
+    /// Return tile height.
+    float GetTileHeight() const;
+    /// Return sprite by id.
+    Sprite2D* GetTileSprite(int id) const;
+    /// Return tmx map.
+    Tmx::Map* GetTMXMap() const;
+
+private:
+    /// Tmx map.
+    Tmx::Map* tmxMap_;
+    /// Id to sprite mapping.
+    HashMap<int, SharedPtr<Sprite2D> > tileSpriteMapping_;
 };
 
 }

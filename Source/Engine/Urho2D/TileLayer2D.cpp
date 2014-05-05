@@ -24,7 +24,12 @@
 #include "Context.h"
 #include "TileLayer2D.h"
 
+#include <Tmx.h>
+
 #include "DebugNew.h"
+#include "TileMap2D.h"
+#include "Node.h"
+#include "StaticSprite2D.h"
 
 namespace Urho3D
 {
@@ -41,6 +46,49 @@ TileLayer2D::~TileLayer2D()
 void TileLayer2D::RegisterObject(Context* context)
 {
     context->RegisterFactory<TileLayer2D>();
+}
+
+void TileLayer2D::SetTmxLayer(TileMap2D* tileMap, const Tmx::Layer* tmxLayer)
+{
+    if (tmxLayer == tmxLayer_)
+        return;
+
+    tileMap_ = tileMap;
+    tmxLayer_ = tmxLayer;
+
+    Node* node = GetNode();
+    node->RemoveAllChildren();
+
+    if (!tmxLayer_)
+        return;
+
+    int width = tmxLayer_->GetWidth();
+    int height = tmxLayer_->GetHeight();
+
+    float tileWidth = tileMap->GetTileWidth();
+    float tileHeight = tileMap->GetTileHeight();
+
+    for (int x = 0; x < width; ++x)
+    {
+        for (int y = 0; y < height; ++y)
+        {
+            const Tmx::MapTile& tile = tmxLayer_->GetTile(x, y);
+            int tileID = tmxLayer_->GetTileId(x, y);
+            if (tileID == 0)
+                continue;
+
+            Sprite2D* sprite = tileMap->GetTileSprite(tileID + 1);
+            if (!sprite)
+                continue;
+
+            Node* tileNode = node->CreateChild("TMXTileNode");
+            tileNode->SetPosition(Vector3(x * tileWidth, -y * tileHeight, 0.0f));
+
+            StaticSprite2D* tileStaticSprite = tileNode->CreateComponent<StaticSprite2D>();
+            tileStaticSprite->SetSprite(sprite);
+            tileStaticSprite->SetLayer(tmxLayer_->GetZOrder() * 100 + y);
+        }
+    }
 }
 
 }
