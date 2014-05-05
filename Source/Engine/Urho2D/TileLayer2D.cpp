@@ -22,14 +22,14 @@
 
 #include "Precompiled.h"
 #include "Context.h"
+#include "Log.h"
+#include "Node.h"
+#include "StaticSprite2D.h"
 #include "TileLayer2D.h"
-
+#include "TileMap2D.h"
 #include <Tmx.h>
 
 #include "DebugNew.h"
-#include "TileMap2D.h"
-#include "Node.h"
-#include "StaticSprite2D.h"
 
 namespace Urho3D
 {
@@ -73,20 +73,24 @@ void TileLayer2D::SetTmxLayer(TileMap2D* tileMap, const Tmx::Layer* tmxLayer)
         for (int y = 0; y < height; ++y)
         {
             const Tmx::MapTile& tile = tmxLayer_->GetTile(x, y);
-            int tileID = tmxLayer_->GetTileId(x, y);
-            if (tileID == 0)
+            if (tile.id == 0)
                 continue;
 
-            Sprite2D* sprite = tileMap->GetTileSprite(tileID + 1);
+            Sprite2D* sprite = tileMap->GetTileSprite(tile.id + 1);
             if (!sprite)
-                continue;
+            {
+                LOGERROR("Could found sprite");
+                return;
+            }
 
-            Node* tileNode = node->CreateChild("TMXTileNode");
-            tileNode->SetPosition(Vector3(x * tileWidth, -y * tileHeight, 0.0f));
+            Node* tileNode = node->CreateChild("TileNode");
+            // Set tile node position, need flip Y
+            tileNode->SetPosition(Vector3(x * tileWidth, (height - 1 - y) * tileHeight, 0.0f));
 
             StaticSprite2D* tileStaticSprite = tileNode->CreateComponent<StaticSprite2D>();
             tileStaticSprite->SetSprite(sprite);
-            tileStaticSprite->SetLayer(tmxLayer_->GetZOrder() * 100 + y);
+            tileStaticSprite->SetLayer(tmxLayer_->GetZOrder());
+            tileStaticSprite->SetOrderInLayer(height - 1 - y);
         }
     }
 }

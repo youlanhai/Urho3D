@@ -22,20 +22,19 @@
 
 #include "Precompiled.h"
 #include "Context.h"
+#include "Drawable2D.h"
+#include "File.h"
+#include "FileSystem.h"
+#include "Log.h"
+#include "Node.h"
+#include "Texture2D.h"
+#include "ResourceCache.h"
+#include "Sprite2D.h"
+#include "TileLayer2D.h"
 #include "TileMap2D.h"
-
 #include <Tmx.h>
 
 #include "DebugNew.h"
-#include "File.h"
-#include "Log.h"
-#include "TileLayer2D.h"
-#include "Node.h"
-#include "ResourceCache.h"
-#include "OpenGL\OGLTexture2D.h"
-#include "FileSystem.h"
-#include "Sprite2D.h"
-#include "Drawable2D.h"
 
 namespace Urho3D
 {
