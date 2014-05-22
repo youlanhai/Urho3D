@@ -36,11 +36,22 @@ void adjustUIElementSize(int dx, int dy)
 
 void applyUIElementRect(UIElement@ dst, UIElement@ src)
 {
-    IntVector2 position1 = src.screenPosition;
-    IntVector2 position2 = src.ElementToScreen(src.size);
+    dst.size = src.size;
 
-    dst.position = dst.parent.ScreenToElement(position1);
-    dst.size = dst.ScreenToElement(position2);
+    IntVector2 pos = src.screenPosition;
+    pos = dst.parent.ScreenToElement(pos);
+
+    if(dst.horizontalAlignment == HorizontalAlignment::HA_CENTER)
+        pos.x -= (dst.parent.size.x - dst.size.x) / 2;
+    else if(dst.horizontalAlignment == HorizontalAlignment::HA_RIGHT)
+        pos.x -= dst.parent.size.x - dst.size.x;
+
+    if(dst.verticalAlignment == VerticalAlignment::VA_CENTER)
+        pos.y -= (dst.parent.size.y - dst.size.y) / 2;
+    else if(dst.verticalAlignment == VerticalAlignment::VA_BOTTOM)
+        pos.y -= dst.parent.size.y - dst.size.y;
+
+    dst.position = pos;
 }
 
 void setEditUIElement(UIElement@ element)
@@ -63,6 +74,7 @@ void updateEditUIElement()
     if(editUIElement is null) return;
 
     applyUIElementRect(editUIElement, borderUIElement);
+    applyUIElementRect(borderUIElement, editUIElement);
 }
 
 void ClearUIElementSelection()

@@ -1113,7 +1113,7 @@ void HandleKeyDown(StringHash eventType, VariantMap& eventData)
     int key = eventData["Key"].GetInt();
     int viewDirection = eventData["Qualifiers"].GetInt() == QUAL_CTRL ? -1 : 1;
 
-    Print("HandleKeyDown: " + key);
+    //Print("HandleKeyDown: " + key);
     
     if(editUIElement !is null)
     {

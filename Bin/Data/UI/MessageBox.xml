@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <element type="Window" style="DialogWindow">
 	<attribute name="Name" value="MessageBox" />
-	<attribute name="Position" value="500 500" />
-	<attribute name="Size" value="400 83" />
+	<attribute name="Position" value="383 355" />
+	<attribute name="Size" value="400 163" />
 	<attribute name="Layout Mode" value="Vertical" />
 	<attribute name="Layout Spacing" value="4" />
 	<attribute name="Layout Border" value="6 6 6 6" />
@@ -12,6 +12,10 @@
 		<attribute name="Max Size" value="2147483647 16" />
 		<element type="Text">
 			<attribute name="Name" value="TitleText" />
+			<attribute name="Top Left Color" value="0.85 0.85 0.85 1" />
+			<attribute name="Top Right Color" value="0.85 0.85 0.85 1" />
+			<attribute name="Bottom Left Color" value="0.85 0.85 0.85 1" />
+			<attribute name="Bottom Right Color" value="0.85 0.85 0.85 1" />
 			<attribute name="Text" value="Error" />
 		</element>
 		<element type="Button" style="CloseButton">
@@ -24,13 +28,17 @@
 		<attribute name="Layout Border" value="5 0 5 0" />
 		<element type="Text">
 			<attribute name="Name" value="MessageText" />
+			<attribute name="Top Left Color" value="0.85 0.85 0.85 1" />
+			<attribute name="Top Right Color" value="0.85 0.85 0.85 1" />
+			<attribute name="Bottom Left Color" value="0.85 0.85 0.85 1" />
+			<attribute name="Bottom Right Color" value="0.85 0.85 0.85 1" />
 			<attribute name="Text" value="message text" />
 			<attribute name="Text Alignment" value="Center" />
 		</element>
 	</element>
-    <element style="EditorSeparator" />
+	<element style="EditorSeparator" />
 	<element style="HorizontalPanel">
-		<attribute name="Min Size" value="74 17" />
+		<attribute name="Min Size" value="84 17" />
 		<attribute name="Max Size" value="2147483647 17" />
 		<element />
 		<element type="Button">
@@ -41,6 +49,10 @@
 			<element type="Text">
 				<attribute name="Horiz Alignment" value="Center" />
 				<attribute name="Vert Alignment" value="Center" />
+				<attribute name="Top Left Color" value="0.85 0.85 0.85 1" />
+				<attribute name="Top Right Color" value="0.85 0.85 0.85 1" />
+				<attribute name="Bottom Left Color" value="0.85 0.85 0.85 1" />
+				<attribute name="Bottom Right Color" value="0.85 0.85 0.85 1" />
 				<attribute name="Text" value="Cancel" />
 			</element>
 		</element>
@@ -51,6 +63,10 @@
 			<element type="Text">
 				<attribute name="Horiz Alignment" value="Center" />
 				<attribute name="Vert Alignment" value="Center" />
+				<attribute name="Top Left Color" value="0.85 0.85 0.85 1" />
+				<attribute name="Top Right Color" value="0.85 0.85 0.85 1" />
+				<attribute name="Bottom Left Color" value="0.85 0.85 0.85 1" />
+				<attribute name="Bottom Right Color" value="0.85 0.85 0.85 1" />
 				<attribute name="Text" value="OK" />
 			</element>
 		</element>
