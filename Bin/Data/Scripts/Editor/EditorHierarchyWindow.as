@@ -637,7 +637,7 @@ void HandleHierarchyListSelectionChange()
     if (selectedNodes.length == 1)
         editNode = selectedNodes[0];
     if (selectedUIElements.length == 1)
-        editUIElement = selectedUIElements[0];
+        setEditUIElement(selectedUIElements[0]);
 
     // If selection contains only components, and they have a common node, use it for editing
     if (selectedNodes.empty && !selectedComponents.empty)

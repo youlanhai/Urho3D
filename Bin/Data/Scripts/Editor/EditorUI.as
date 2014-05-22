@@ -1109,8 +1109,68 @@ void HandleUIElementDefaultStyle(StringHash eventType, VariantMap& eventData)
 
 void HandleKeyDown(StringHash eventType, VariantMap& eventData)
 {
+
     int key = eventData["Key"].GetInt();
     int viewDirection = eventData["Qualifiers"].GetInt() == QUAL_CTRL ? -1 : 1;
+
+    Print("HandleKeyDown: " + key);
+    
+    if(editUIElement !is null)
+    {
+        bool ret = true;
+        if (key == KEY_ESC)
+        {
+            setEditUIElement(null);
+        }
+        else if (eventData["Qualifiers"].GetInt() == QUAL_ALT)
+        {
+            if(key == KEY_LEFT)
+            {
+                adjustUIElementSize(-1, 0);
+            }
+            else if(key == KEY_RIGHT)
+            {
+                adjustUIElementSize(1, 0);
+            }
+            else if(key == KEY_UP)
+            {
+                adjustUIElementSize(0, -1);
+            }
+            else if(key == KEY_DOWN)
+            {
+                adjustUIElementSize(0, 1);
+            }
+            else
+            {
+                ret = false;
+            }
+        }
+        else
+        {
+            if(key == KEY_LEFT)
+            {
+                adjustUIElementPosition(-1, 0);
+            }
+            else if(key == KEY_RIGHT)
+            {
+                adjustUIElementPosition(1, 0);
+            }
+            else if(key == KEY_UP)
+            {
+                adjustUIElementPosition(0, -1);
+            }
+            else if(key == KEY_DOWN)
+            {
+                adjustUIElementPosition(0, 1);
+            }
+            else
+            {
+                ret = false;
+            }
+        }
+
+        if(ret) return;
+    }
 
     if (key == KEY_ESC)
     {

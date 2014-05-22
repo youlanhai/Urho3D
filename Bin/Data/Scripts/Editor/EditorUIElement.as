@@ -4,6 +4,7 @@ UIElement@ editorUIElement;
 XMLFile@ uiElementDefaultStyle;
 Array<String> availableStyles;
 
+Window@ borderUIElement;
 UIElement@ editUIElement;
 Array<Serializable@> selectedUIElements;
 Array<Serializable@> editUIElements;
@@ -19,15 +20,63 @@ const ShortStringHash FILENAME_VAR("FileName");
 const ShortStringHash MODIFIED_VAR("Modified");
 const ShortStringHash CHILD_ELEMENT_FILENAME_VAR("ChildElemFileName");
 
+void adjustUIElementPosition(int dx, int dy)
+{
+    IntVector2 position = borderUIElement.position;
+    borderUIElement.position = IntVector2(position.x + dx, position.y + dy);
+    updateEditUIElement();
+}
+
+void adjustUIElementSize(int dx, int dy)
+{
+    IntVector2 size = borderUIElement.size;
+    borderUIElement.size = IntVector2(size.x + dx, size.y + dy);
+    updateEditUIElement();
+}
+
+void applyUIElementRect(UIElement@ dst, UIElement@ src)
+{
+    IntVector2 position1 = src.screenPosition;
+    IntVector2 position2 = src.ElementToScreen(src.size);
+
+    dst.position = dst.parent.ScreenToElement(position1);
+    dst.size = dst.ScreenToElement(position2);
+}
+
+void setEditUIElement(UIElement@ element)
+{
+    editUIElement = element;
+
+    if(element is null)
+    {
+        borderUIElement.visible = false;
+    }
+    else
+    {
+        applyUIElementRect(borderUIElement, editUIElement);
+        borderUIElement.visible = true;
+    }
+}
+
+void updateEditUIElement()
+{
+    if(editUIElement is null) return;
+
+    applyUIElementRect(editUIElement, borderUIElement);
+}
+
 void ClearUIElementSelection()
 {
-    editUIElement = null;
+    setEditUIElement(null);
     selectedUIElements.Clear();
     editUIElements.Clear();
 }
 
 void CreateRootUIElement()
 {
+    borderUIElement = CreateUIEditDragBorder(100, 300, 300, 200);
+    Print("CreateRootUIElement fini");
+
     // Create a root UIElement only once here, do not confuse this with ui.root itself
     editorUIElement = ui.root.CreateChild("UIElement");
     editorUIElement.name = "UI";
@@ -42,6 +91,33 @@ void CreateRootUIElement()
 
     // Since this root UIElement is not being handled by above handlers, update it into hierarchy list manually as another list root item
     UpdateHierarchyItem(M_MAX_UNSIGNED, editorUIElement, null);
+}
+
+Window@ CreateUIEditDragBorder(int posX, int posY, int sizeX, int sizeY)
+{
+    Window@ border = Window();
+    ui.root.AddChild(border);
+    border.name = "border";
+    border.enabled = true;
+    border.movable = true;
+    border.resizable = true;
+    border.style = "DialogWindow";
+    border.SetSize(sizeX, sizeY); // relevant size gets set by viewport later
+    border.SetPosition(posX, posY);
+    border.opacity = uiMaxOpacity;
+    SubscribeToEvent(border, "DragMove", "HandleBorderUIDragMove");
+    SubscribeToEvent(border, "DragEnd", "HandleBorderUIDragDragEnd");
+    return border;
+}
+
+void HandleBorderUIDragMove(StringHash eventType, VariantMap& eventData)
+{
+    updateEditUIElement();
+}
+
+void HandleBorderUIDragDragEnd(StringHash eventType, VariantMap& eventData)
+{
+    updateEditUIElement();
 }
 
 bool NewUIElement(const String&in typeName)
